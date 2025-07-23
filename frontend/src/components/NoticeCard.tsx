@@ -42,7 +42,6 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
   const [isHovered, setIsHovered] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
   const getTypeColor = (type: string) => {
     switch (type) {

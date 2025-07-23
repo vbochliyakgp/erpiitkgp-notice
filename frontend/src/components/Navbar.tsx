@@ -21,7 +21,6 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
   const navItems = [
     { path: "/notices", label: "Notices", icon: <DashboardIcon /> },
