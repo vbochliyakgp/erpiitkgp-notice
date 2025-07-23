@@ -55,6 +55,14 @@ app.get("/api/distinct-notice-types", noticeCtrl.getDistinctNoticeFields);
 app.get("/api/contacts", contactCtrl.getContacts);
 app.post("/api/contacts", contactCtrl.createContact);
 
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    message: "Server is running",
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
