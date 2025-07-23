@@ -45,11 +45,11 @@ const withCache = (cacheInstance, keyPrefix) => {
         // Try to get from cache first
         const cachedResult = cacheInstance.get(cacheKey);
         if (cachedResult) {
-          console.log(`Cache hit for: ${cacheKey}`);
+          // console.log(`Cache hit for: ${cacheKey}`);
           return res.json(cachedResult);
         }
         
-        console.log(`Cache miss for: ${cacheKey}`);
+        // console.log(`Cache miss for: ${cacheKey}`);
         
         // If not in cache, execute the original function
         // But we need to intercept the response to cache it
@@ -57,7 +57,7 @@ const withCache = (cacheInstance, keyPrefix) => {
         res.json = function(data) {
           // Cache the response data
           cacheInstance.set(cacheKey, data);
-          console.log(`Cached result for: ${cacheKey}`);
+          // console.log(`Cached result for: ${cacheKey}`);
           
           // Call the original json method
           originalJson.call(this, data);

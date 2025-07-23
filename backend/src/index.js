@@ -35,15 +35,12 @@ app.use(express.urlencoded({ extended: true, limit: ".1mb" }));
 
 // Logging middleware (production-safe)
 app.use((req, res, next) => {
-  console.log("Request Method:", req.method, "URL:", req.url);
-  console.log("Request Query Params:", req.query);
-
+  console.log("Request Method:", req.method, "URL:", req.url,"params:", req.params);
   if (process.env.NODE_ENV !== "production") {
     console.log("Request Body:", req.body);
   }
-
   res.on("finish", () => {
-    console.log("Response Status Code:", res.statusCode);
+    console.log("Response Status:", res.statusCode);
   });
   next();
 });
@@ -91,7 +88,7 @@ mongoose
     syncJob();
     setInterval(syncJob, 10 * 60 * 1000);
   })
-  .catch((err) => console.error("DB connect error:", err));
+  .catch((err) => console.error("DB connect error................:", err));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server on port ${PORT}`));

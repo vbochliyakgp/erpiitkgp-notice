@@ -41,8 +41,8 @@ async function syncNotices() {
       },
     });
     const xml = resp.data;
-    fs.writeFileSync("notices.xml", xml);
-    console.log("XML saved to notice.xml");
+    // fs.writeFileSync("notices.xml", xml);
+    // console.log("XML saved to notice.xml");
     // const xml = fs.readFileSync("../notice.xml", "utf-8");
     const parsed = await xml2js.parseStringPromise(xml, {
       explicitArray: false,

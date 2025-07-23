@@ -51,7 +51,6 @@ const NoticesPage: React.FC = () => {
 
   const fetchFilterOptions = async () => {
     const response = await client.get("/api/distinct-notice-types");
-    console.log("Fetched filter options:", response);
     setFilterOptions({
       types: response.data.types || [],
       subjects: response.data.subjects || [],
