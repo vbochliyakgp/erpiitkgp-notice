@@ -245,7 +245,7 @@ const NoticesPage: React.FC = () => {
               <Box sx={{ p: { xs: 3, sm: 4 } }}>
                 <Grid container spacing={{ xs: 2, sm: 3 }}>
                   {/* Type Filter */}
-                  <Grid item xs={12} sm={6} md={4}>
+                  <Grid size={{ xs: 12,sm: 6, md: 4 }}>
                     <FormControl fullWidth>
                       <InputLabel>Notice Type</InputLabel>
                       <Select
@@ -275,7 +275,7 @@ const NoticesPage: React.FC = () => {
                   </Grid>
 
                   {/* Subject Filter */}
-                  <Grid item xs={12} sm={6} md={4}>
+                  <Grid size={{ xs: 12,sm: 6, md: 4 }}>
                     <FormControl fullWidth>
                       <InputLabel>Subject</InputLabel>
                       <Select
@@ -305,7 +305,7 @@ const NoticesPage: React.FC = () => {
                   </Grid>
 
                   {/* Company Filter */}
-                  <Grid item xs={12} sm={12} md={4}>
+                  <Grid size={{ xs: 12,sm: 6, md: 4 }}>
                     <FormControl fullWidth>
                       <InputLabel>Company</InputLabel>
                       <Select
@@ -515,10 +515,7 @@ const NoticesPage: React.FC = () => {
               <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
                 {displayNotices.map((notice) => (
                   <Grid
-                    item
-                    xs={12}
-                    sm={6}
-                    lg={4}
+                    size={{ xs: 12, sm: 6, lg: 4 }}
                     key={notice.notification_number}
                   >
                     <Box

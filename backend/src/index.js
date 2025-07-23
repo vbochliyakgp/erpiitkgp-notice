@@ -75,8 +75,6 @@ app.use((err, req, res, next) => {
 // Database connection
 mongoose
   .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
     maxPoolSize: 10,
   })
   .then(() => {

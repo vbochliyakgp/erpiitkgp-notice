@@ -205,8 +205,8 @@ const ContactPage: React.FC = () => {
               px: { xs: 2, sm: 0 },
             }}
           >
-            Love to hear from you. Send a message and we'll respond as
-            soon as possible.
+            Love to hear from you. Send a message and we'll respond as soon as
+            possible.
           </Typography>
         </Box>
 
@@ -244,7 +244,7 @@ const ContactPage: React.FC = () => {
             <Box component="form" noValidate>
               <Grid container spacing={3}>
                 {/* Name Field */}
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="Full Name"
@@ -264,7 +264,7 @@ const ContactPage: React.FC = () => {
                 </Grid>
 
                 {/* Email Field */}
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="Email Address"
@@ -285,7 +285,7 @@ const ContactPage: React.FC = () => {
                 </Grid>
 
                 {/* Phone Field */}
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
                     label="Phone Number"
@@ -305,7 +305,7 @@ const ContactPage: React.FC = () => {
                 </Grid>
 
                 {/* Message Field */}
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
                     label="Message"
@@ -320,8 +320,8 @@ const ContactPage: React.FC = () => {
                       startAdornment: (
                         <InputAdornment
                           position="start"
-                          sx={{ 
-                            alignSelf: "flex-start", 
+                          sx={{
+                            alignSelf: "flex-start",
                             mt: 1.5,
                           }}
                         >
@@ -341,7 +341,7 @@ const ContactPage: React.FC = () => {
                 </Grid>
 
                 {/* Submit Button */}
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Box
                     sx={{
                       display: "flex",

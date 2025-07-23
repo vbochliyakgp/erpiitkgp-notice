@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { 
   TextField, 
   Button, 
-  Card, 
   CardContent, 
   CircularProgress, 
   Typography, 
@@ -312,7 +311,7 @@ const SearchPage: React.FC = () => {
             {results.length > 0 ? (
               <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
                 {results.map((notice) => (
-                  <Grid item xs={12} sm={6} lg={4} key={notice.notification_number}>
+                  <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={notice.notification_number}>
                     <Box
                       sx={{
                         height: "100%",
