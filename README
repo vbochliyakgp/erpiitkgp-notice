@@ -1,0 +1,39 @@
+# ERP Notice Fetcher
+MERN PROJECT
+
+## Overview
+A web application to fetch and display notices from an ERP system, consisting of frontend and backend components.
+
+## Important Note
+This application requires manually copying browser cookies from the ERP system. These cookies expire quickly, making this a temporary solution.
+
+## Setup Instructions
+
+### Backend Setup
+1. Navigate to the backend directory
+2. Create a `.env` file based on the provided `.env.example` template
+3. Install dependencies:
+    ```
+    npm i
+    ```
+4. Start the development server:
+    ```
+    npm run dev
+    ```
+
+### Frontend Setup
+1. Navigate to the frontend directory
+2. Install dependencies:
+    ```
+    npm i
+    ```
+3. Start the development server:
+    ```
+    npm run dev
+    ```
+
+## Manual Configuration Requirements
+You will need to:
+- Manually copy and paste browser cookies from the ERP system
+- Obtain the correct URL from the ERP system
+- Set up your own MongoDB database
