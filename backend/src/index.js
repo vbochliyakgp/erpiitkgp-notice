@@ -15,7 +15,7 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: true,
     credentials: true,
     optionsSuccessStatus: 200,
   })
@@ -25,7 +25,7 @@ app.use(
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
-  message: "Too many requests from this IP",
+  message: "Too many requests",
 });
 app.use("/api/", limiter);
 
