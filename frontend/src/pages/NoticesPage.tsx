@@ -57,9 +57,11 @@ const NoticesPage: React.FC = () => {
       companies: response.data.companies || [],
     });
   };
+
   useEffect(() => {
     fetchFilterOptions();
   }, []);
+
   const prev = () => {
     const p = Math.max(1, page - 1);
     setPage(p);
@@ -244,7 +246,7 @@ const NoticesPage: React.FC = () => {
               <Box sx={{ p: { xs: 3, sm: 4 } }}>
                 <Grid container spacing={{ xs: 2, sm: 3 }}>
                   {/* Type Filter */}
-                  <Grid size={{ xs: 12,sm: 6, md: 4 }}>
+                  <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <FormControl fullWidth>
                       <InputLabel>Notice Type</InputLabel>
                       <Select
@@ -274,7 +276,7 @@ const NoticesPage: React.FC = () => {
                   </Grid>
 
                   {/* Subject Filter */}
-                  <Grid size={{ xs: 12,sm: 6, md: 4 }}>
+                  <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <FormControl fullWidth>
                       <InputLabel>Subject</InputLabel>
                       <Select
@@ -304,7 +306,7 @@ const NoticesPage: React.FC = () => {
                   </Grid>
 
                   {/* Company Filter */}
-                  <Grid size={{ xs: 12,sm: 6, md: 4 }}>
+                  <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <FormControl fullWidth>
                       <InputLabel>Company</InputLabel>
                       <Select
@@ -511,16 +513,36 @@ const NoticesPage: React.FC = () => {
         {!displayLoading && !displayError && (
           <Box>
             {displayNotices.length > 0 ? (
-              <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
+              <Grid 
+                container 
+                spacing={{ xs: 2, sm: 3, md: 4 }}
+                sx={{
+                  // Ensure consistent card heights and proper alignment
+                  '& .MuiGrid-item': {
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }
+                }}
+              >
                 {displayNotices.map((notice) => (
                   <Grid
-                    size={{ xs: 12, sm: 6, lg: 4 }}
+                    size={{ xs: 12, sm: 6, lg: 4, xl: 3 }}
                     key={notice.notification_number}
+                    sx={{
+                      // Ensure full height for consistent card layout
+                      minHeight: { xs: 'auto', sm: '350px', md: '400px' },
+                    }}
                   >
                     <Box
                       sx={{
                         height: "100%",
-                        "& > *": { height: "100%" },
+                        display: 'flex',
+                        flexDirection: 'column',
+                        "& > *": { 
+                          height: "100%",
+                          display: 'flex',
+                          flexDirection: 'column',
+                        },
                       }}
                     >
                       <NoticeCard notice={notice} />

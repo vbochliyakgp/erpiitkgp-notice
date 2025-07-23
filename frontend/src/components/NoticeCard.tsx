@@ -11,6 +11,8 @@ import {
   Button,
   IconButton,
   Box,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import {
   Business as BusinessIcon,
@@ -38,6 +40,9 @@ interface NoticeCardProps {
 const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -97,23 +102,25 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
     }
   };
 
-  // Updated to 90 characters max
   const truncateTitle = (title: string) => {
     return title.length > 90 ? title.substring(0, 90) + "..." : title;
   };
 
-  // Format date and time
+  // Format date and time with better handling
   const formatDateTime = (dateString: string) => {
     const date = new Date(dateString);
     const formattedDate = date
       .toLocaleDateString("en-GB")
       .replace(/\//g, "/")
       .slice(0, 8); // dd/mm/yy format
+    
+    // Better time formatting to prevent wrapping
     const formattedTime = date.toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
-    });
+    }).replace(/\s/g, ''); // Remove spaces to prevent wrapping
+    
     return { date: formattedDate, time: formattedTime };
   };
 
@@ -126,14 +133,7 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         sx={{
-          width: {
-            xs: "100%",
-            sm: "100%",
-            md: "400px",
-            lg: "380px",
-            xl: "360px",
-          },
-          maxWidth: "400px",
+          width: "100%",
           height: { xs: "auto", sm: 350 },
           minHeight: { xs: 300, sm: 350 },
           background: "linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)",
@@ -200,14 +200,15 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
         >
           {/* Top Section */}
           <Box>
-            {/* Header with Type and Date/Time - Better Layout */}
+            {/* Header with Type and Date/Time - Fixed Layout */}
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "center",
+                alignItems: "flex-start",
                 mb: 3,
-                gap: 2,
+                gap: 1.5,
+                flexWrap: { xs: "wrap", sm: "nowrap" },
               }}
             >
               <Chip
@@ -223,62 +224,87 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
                   boxShadow: `0 4px 12px ${getTypeColor(notice.type).shadow}`,
                   transform: isHovered ? "scale(1.05)" : "scale(1)",
                   transition: "transform 0.3s ease",
+                  flexShrink: 0,
                   "& .MuiChip-label": {
                     px: 2.5,
                   },
                 }}
               />
 
-              {/* Date and Time in a single container */}
+              {/* Fixed Date and Time Layout */}
               <Box
                 sx={{
                   display: "flex",
-                  alignItems: "center",
-                  gap: 0.5,
-                  px: 2,
-                  py: 0.75,
+                  flexDirection: { xs: "column", sm: "row" },
+                  alignItems: { xs: "flex-end", sm: "center" },
+                  gap: { xs: 0.5, sm: 1 },
+                  px: { xs: 1.5, sm: 2 },
+                  py: { xs: 0.5, sm: 0.75 },
                   borderRadius: 2.5,
-                  background:
-                    "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)",
+                  background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)",
                   border: "1px solid rgba(148, 163, 184, 0.2)",
                   boxShadow: "0 2px 8px rgba(71, 85, 105, 0.1)",
+                  flexShrink: 0,
+                  minWidth: "fit-content",
                 }}
               >
-                <CalendarIcon
+                {/* Date */}
+                <Box
                   sx={{
-                    fontSize: "0.875rem",
-                    color: "#475569",
-                    mr: 0.5,
-                  }}
-                />
-                <Typography
-                  variant="caption"
-                  sx={{
-                    fontSize: "0.7rem",
-                    fontWeight: 600,
-                    color: "#475569",
-                    mr: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.5,
+                    whiteSpace: "nowrap",
                   }}
                 >
-                  {dateTime.date}
-                </Typography>
-                <TimeIcon
+                  <CalendarIcon
+                    sx={{
+                      fontSize: "0.75rem",
+                      color: "#475569",
+                    }}
+                  />
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontSize: { xs: "0.65rem", sm: "0.7rem" },
+                      fontWeight: 600,
+                      color: "#475569",
+                      lineHeight: 1,
+                    }}
+                  >
+                    {dateTime.date}
+                  </Typography>
+                </Box>
+
+                {/* Time - Ensuring no wrapping */}
+                <Box
                   sx={{
-                    fontSize: "0.875rem",
-                    color: "#475569",
-                    mr: 0.5,
-                  }}
-                />
-                <Typography
-                  variant="caption"
-                  sx={{
-                    fontSize: "0.7rem",
-                    fontWeight: 600,
-                    color: "#475569",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.5,
+                    whiteSpace: "nowrap",
                   }}
                 >
-                  {dateTime.time}
-                </Typography>
+                  <TimeIcon
+                    sx={{
+                      fontSize: "0.75rem",
+                      color: "#475569",
+                    }}
+                  />
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontSize: { xs: "0.65rem", sm: "0.7rem" },
+                      fontWeight: 600,
+                      color: "#475569",
+                      lineHeight: 1,
+                      whiteSpace: "nowrap",
+                      minWidth: "fit-content",
+                    }}
+                  >
+                    {dateTime.time}
+                  </Typography>
+                </Box>
               </Box>
             </Box>
 
@@ -303,6 +329,7 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
                   color: "#4f46e5",
                   transform: isHovered ? "rotate(5deg)" : "rotate(0deg)",
                   transition: "transform 0.3s ease",
+                  flexShrink: 0,
                 }}
               />
               <Typography
@@ -413,27 +440,41 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
         </CardContent>
       </Card>
 
-      {/* Enhanced Modal Dialog */}
+      {/* Enhanced Responsive Modal Dialog */}
       <Dialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         maxWidth="md"
         fullWidth
+        fullScreen={isMobile}
         PaperProps={{
           sx: {
             background: "linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)",
             backdropFilter: "blur(20px)",
             border: "1px solid rgba(148, 163, 184, 0.2)",
-            borderRadius: 4,
+            borderRadius: isMobile ? 0 : 4,
             boxShadow: "0 25px 50px rgba(0, 0, 0, 0.15)",
+            margin: isMobile ? 0 : 'auto',
+            maxHeight: isMobile ? '100vh' : '90vh',
+            height: isMobile ? '100vh' : 'auto',
           },
+        }}
+        sx={{
+          '& .MuiDialog-container': {
+            alignItems: isMobile ? 'stretch' : 'center',
+          }
         }}
       >
         <DialogTitle
           sx={{
             borderBottom: "1px solid rgba(148, 163, 184, 0.15)",
-            pb: 3,
+            pb: { xs: 2, sm: 3 },
+            pt: { xs: 2, sm: 3 },
+            px: { xs: 2, sm: 3 },
             background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            position: 'sticky',
+            top: 0,
+            zIndex: 1,
           }}
         >
           <Box
@@ -444,13 +485,22 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
               gap: 2,
             }}
           >
-            <Box sx={{ flex: 1 }}>
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Box 
+                sx={{ 
+                  display: "flex", 
+                  alignItems: "center", 
+                  mb: { xs: 1.5, sm: 2 },
+                  flexWrap: { xs: 'wrap', sm: 'nowrap' },
+                  gap: 1
+                }}
+              >
                 <ArticleIcon
                   sx={{
-                    mr: 1.5,
+                    mr: { xs: 1, sm: 1.5 },
                     color: "#4f46e5",
-                    fontSize: "1.75rem",
+                    fontSize: { xs: "1.5rem", sm: "1.75rem" },
+                    flexShrink: 0,
                   }}
                 />
                 <Typography
@@ -458,14 +508,21 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
                   sx={{
                     fontWeight: 700,
                     color: "#1e293b",
-                    fontSize: { xs: "1.25rem", sm: "1.5rem" },
+                    fontSize: { xs: "1.125rem", sm: "1.5rem" },
+                    wordBreak: 'break-word',
+                    lineHeight: 1.2,
                   }}
                 >
                   {notice.company}
                 </Typography>
               </Box>
 
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5, mt: 2 }}>
+              <Box sx={{ 
+                display: "flex", 
+                flexWrap: "wrap", 
+                gap: { xs: 1, sm: 1.5 }, 
+                mt: { xs: 1, sm: 2 }
+              }}>
                 <Chip
                   label={notice.type}
                   size="small"
@@ -473,7 +530,8 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
                     background: getTypeColor(notice.type).bg,
                     color: getTypeColor(notice.type).color,
                     fontWeight: 700,
-                    height: 32,
+                    height: { xs: 28, sm: 32 },
+                    fontSize: { xs: "0.7rem", sm: "0.75rem" },
                     boxShadow: `0 4px 12px ${getTypeColor(notice.type).shadow}`,
                   }}
                 />
@@ -484,10 +542,14 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
                     background: getSubjectColor(notice.subject).bg,
                     color: getSubjectColor(notice.subject).color,
                     fontWeight: 600,
-                    height: 32,
+                    height: { xs: 28, sm: 32 },
+                    fontSize: { xs: "0.7rem", sm: "0.75rem" },
                     boxShadow: `0 4px 12px ${
                       getSubjectColor(notice.subject).shadow
                     }`,
+                    '& .MuiChip-label': {
+                      px: { xs: 1.5, sm: 2 },
+                    }
                   }}
                 />
               </Box>
@@ -498,30 +560,46 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
               sx={{
                 background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)",
                 border: "1px solid rgba(148, 163, 184, 0.2)",
+                width: { xs: 36, sm: 40 },
+                height: { xs: 36, sm: 40 },
+                flexShrink: 0,
                 "&:hover": {
-                  background:
-                    "linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)",
+                  background: "linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)",
                   transform: "rotate(90deg)",
                 },
                 transition: "all 0.3s ease",
               }}
             >
-              <CloseIcon sx={{ color: "#64748b" }} />
+              <CloseIcon 
+                sx={{ 
+                  color: "#64748b",
+                  fontSize: { xs: "1.25rem", sm: "1.5rem" }
+                }} 
+              />
             </IconButton>
           </Box>
         </DialogTitle>
 
-        <DialogContent sx={{ pt: 3 }}>
+        <DialogContent 
+          sx={{ 
+            pt: { xs: 2, sm: 3 },
+            px: { xs: 2, sm: 3 },
+            pb: { xs: 2, sm: 3 },
+            flex: 1,
+            overflow: 'auto',
+          }}
+        >
           <Box sx={{ mb: 3 }}>
-            {/* Enhanced date/time display in modal */}
+            {/* Enhanced responsive date/time display in modal */}
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                gap: 3,
-                mb: 4,
-                p: 3,
+                justifyContent: { xs: "flex-start", sm: "center" },
+                flexDirection: { xs: "column", sm: "row" },
+                gap: { xs: 2, sm: 3 },
+                mb: { xs: 3, sm: 4 },
+                p: { xs: 2, sm: 3 },
                 borderRadius: 3,
                 background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
                 border: "1px solid rgba(148, 163, 184, 0.2)",
@@ -532,83 +610,127 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
                   display: "flex",
                   alignItems: "center",
                   gap: 1,
-                  px: 3,
-                  py: 1.5,
+                  px: { xs: 2, sm: 3 },
+                  py: { xs: 1, sm: 1.5 },
                   borderRadius: 3,
-                  background:
-                    "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                  background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
                   color: "#fff",
                   fontWeight: 700,
                   boxShadow: "0 4px 15px rgba(79, 70, 229, 0.3)",
+                  minWidth: "fit-content",
                 }}
               >
-                <CalendarIcon sx={{ fontSize: "1.125rem" }} />
-                <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                <CalendarIcon sx={{ fontSize: { xs: "1rem", sm: "1.125rem" } }} />
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    fontWeight: 700,
+                    fontSize: { xs: "0.875rem", sm: "1rem" },
+                    whiteSpace: "nowrap",
+                  }}
+                >
                   {dateTime.date}
                 </Typography>
               </Box>
 
               <Box
                 sx={{
-                  px: 3,
-                  py: 1.5,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  px: { xs: 2, sm: 3 },
+                  py: { xs: 1, sm: 1.5 },
                   borderRadius: 3,
-                  background:
-                    "linear-gradient(135deg, #059669 0%, #047857 100%)",
+                  background: "linear-gradient(135deg, #059669 0%, #047857 100%)",
                   color: "#fff",
                   fontWeight: 700,
                   boxShadow: "0 4px 15px rgba(5, 150, 105, 0.3)",
+                  minWidth: "fit-content",
                 }}
               >
-                <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                <TimeIcon sx={{ fontSize: { xs: "1rem", sm: "1.125rem" } }} />
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    fontWeight: 700,
+                    fontSize: { xs: "0.875rem", sm: "1rem" },
+                    whiteSpace: "nowrap",
+                  }}
+                >
                   {dateTime.time}
                 </Typography>
               </Box>
 
-              <Box
-                sx={{
-                  mx: 1,
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  bgcolor: "#cbd5e1",
-                }}
-              />
+              {!isMobile && (
+                <>
+                  <Box
+                    sx={{
+                      mx: 1,
+                      width: 6,
+                      height: 6,
+                      borderRadius: "50%",
+                      bgcolor: "#cbd5e1",
+                    }}
+                  />
 
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "#64748b",
-                  fontWeight: 600,
-                  px: 2,
-                  py: 1,
-                  borderRadius: 2,
-                  background: "rgba(148, 163, 184, 0.1)",
-                }}
-              >
-                Notice #{notice.notification_number}
-              </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "#64748b",
+                      fontWeight: 600,
+                      px: 2,
+                      py: 1,
+                      borderRadius: 2,
+                      background: "rgba(148, 163, 184, 0.1)",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Notice #{notice.notification_number}
+                  </Typography>
+                </>
+              )}
             </Box>
 
-            <Box sx={{ mb: 4 }}>
+            {/* Mobile Notice Number */}
+            {isMobile && (
+              <Box sx={{ textAlign: 'center', mb: 3 }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "#64748b",
+                    fontWeight: 600,
+                    px: 2,
+                    py: 1,
+                    borderRadius: 2,
+                    background: "rgba(148, 163, 184, 0.1)",
+                    display: "inline-block",
+                  }}
+                >
+                  Notice #{notice.notification_number}
+                </Typography>
+              </Box>
+            )}
+
+            <Box sx={{ mb: { xs: 3, sm: 4 } }}>
               <Typography
                 variant="h6"
                 sx={{
                   fontWeight: 700,
-                  mb: 2,
+                  mb: { xs: 1.5, sm: 2 },
                   color: "#1e293b",
                   display: "flex",
                   alignItems: "center",
                   gap: 1,
+                  fontSize: { xs: "1rem", sm: "1.25rem" },
                 }}
               >
                 <Box
                   sx={{
                     width: 4,
-                    height: 20,
+                    height: { xs: 16, sm: 20 },
                     borderRadius: 2,
-                    background:
-                      "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                    background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                    flexShrink: 0,
                   }}
                 />
                 Title
@@ -617,17 +739,16 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
                 variant="body1"
                 sx={{
                   lineHeight: 1.7,
-                  p: 3,
+                  p: { xs: 2, sm: 3 },
                   borderRadius: 3,
-                  background:
-                    "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+                  background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
                   border: "1px solid rgba(148, 163, 184, 0.2)",
                   color: "#334155",
+                  fontSize: { xs: "0.875rem", sm: "1rem" },
+                  wordBreak: "break-word",
                 }}
               >
-                {notice.title.length > 90
-                  ? notice.title.substring(0, 90) + "..."
-                  : notice.title}
+                {notice.title.length > 100 ? notice.title.slice(0, 100) + "..." : notice.title}
               </Typography>
             </Box>
 
@@ -636,20 +757,21 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
                 variant="h6"
                 sx={{
                   fontWeight: 700,
-                  mb: 2,
+                  mb: { xs: 1.5, sm: 2 },
                   color: "#1e293b",
                   display: "flex",
                   alignItems: "center",
                   gap: 1,
+                  fontSize: { xs: "1rem", sm: "1.25rem" },
                 }}
               >
                 <Box
                   sx={{
                     width: 4,
-                    height: 20,
+                    height: { xs: 16, sm: 20 },
                     borderRadius: 2,
-                    background:
-                      "linear-gradient(135deg, #059669 0%, #047857 100%)",
+                    background: "linear-gradient(135deg, #059669 0%, #047857 100%)",
+                    flexShrink: 0,
                   }}
                 />
                 Description
@@ -658,13 +780,16 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
                 variant="body1"
                 sx={{
                   lineHeight: 1.7,
-                  p: 3,
+                  p: { xs: 2, sm: 3 },
                   borderRadius: 3,
-                  background:
-                    "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+                  background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
                   border: "1px solid rgba(148, 163, 184, 0.2)",
                   whiteSpace: "pre-wrap",
                   color: "#334155",
+                  fontSize: { xs: "0.875rem", sm: "1rem" },
+                  wordBreak: "break-word",
+                  maxHeight: { xs: "300px", sm: "none" },
+                  overflowY: { xs: "auto", sm: "visible" },
                 }}
               >
                 {notice.description}
@@ -675,23 +800,27 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
 
         <DialogActions
           sx={{
-            p: 3,
+            p: { xs: 2, sm: 3 },
             borderTop: "1px solid rgba(148, 163, 184, 0.15)",
             background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            position: isMobile ? 'sticky' : 'static',
+            bottom: 0,
+            zIndex: 1,
           }}
         >
           <Button
             onClick={() => setDialogOpen(false)}
             variant="contained"
+            fullWidth={isMobile}
             sx={{
-              px: 6,
-              py: 2,
+              px: { xs: 4, sm: 6 },
+              py: { xs: 1.5, sm: 2 },
               borderRadius: 3,
               background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
               boxShadow: "0 8px 25px rgba(79, 70, 229, 0.3)",
               textTransform: "none",
               fontWeight: 700,
-              fontSize: "1rem",
+              fontSize: { xs: "0.875rem", sm: "1rem" },
               "&:hover": {
                 background: "linear-gradient(135deg, #4338ca 0%, #6d28d9 100%)",
                 boxShadow: "0 12px 35px rgba(79, 70, 229, 0.4)",
